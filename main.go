@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	today "github.com/boris1592/aoc-2025/day2"
+	today "github.com/boris1592/aoc-2025/day3"
 )
 
 func main() {
