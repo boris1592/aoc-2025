@@ -5,9 +5,25 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync"
+	"time"
 
 	today "github.com/boris1592/aoc-2025/day8"
 )
+
+func runSolution[F ~func(string) (any, error)](name string, solution F, input string) {
+	var (
+		start    = time.Now()
+		ans, err = solution(input)
+		duration = time.Since(start).Milliseconds()
+	)
+
+	if err != nil {
+		fmt.Printf("%s got err: %s\n", name, err.Error())
+	}
+
+	fmt.Printf("%s got: %v in %d ms\n", name, ans, duration)
+}
 
 func main() {
 	inputBytes, err := os.ReadFile("input")
@@ -17,32 +33,16 @@ func main() {
 
 	var (
 		input = strings.TrimSpace(string(inputBytes))
-		got1  = make(chan struct{})
-		got2  = make(chan struct{})
+		wg    sync.WaitGroup
 	)
 
-	go func() {
-		defer func() { got1 <- struct{}{} }()
+	wg.Go(func() {
+		runSolution("part 1", today.Solve1, input)
+	})
 
-		ans, err := today.Solve1(input)
-		if err != nil {
-			fmt.Printf("part 1 got err: %s\n", err.Error())
-		}
+	wg.Go(func() {
+		runSolution("part 2", today.Solve2, input)
+	})
 
-		fmt.Printf("part1 got: %v\n", ans)
-	}()
-
-	go func() {
-		defer func() { got2 <- struct{}{} }()
-
-		ans, err := today.Solve2(input)
-		if err != nil {
-			fmt.Printf("part 2 got err: %s", err.Error())
-		}
-
-		<-got1
-		fmt.Printf("part2 got: %v\n", ans)
-	}()
-
-	<-got2
+	wg.Wait()
 }
