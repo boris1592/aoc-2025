@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	today "github.com/boris1592/aoc-2025/day11"
+	today "github.com/boris1592/aoc-2025/day12"
 )
 
 func runSolution[F ~func(string) (any, error)](name string, solution F, input string) {
