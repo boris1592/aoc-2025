@@ -6,15 +6,6 @@ import (
 	"strings"
 )
 
-func intLen(n int) (l int) {
-	for n > 0 {
-		l++
-		n /= 10
-	}
-
-	return
-}
-
 func solveForRange(from, to int) (total int) {
 	currLen := intLen(from)
 	currLen += currLen % 2
